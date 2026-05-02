@@ -19,9 +19,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_MONOREPO_APP_TOKEN }}
 
       # Build & Push Backend
-      
       # docker build -t muzahidswe/azure-turbo-monorepo-backend:latest -f apps/backend/Dockerfile .          
-      #     docker push muzahidswe/azure-turbo-monorepo-backend:latest
+      # docker push muzahidswe/azure-turbo-monorepo-backend:latest
 
       - name: Build and Push Backend Image
         run: |    
@@ -51,7 +50,6 @@ jobs:
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
           imageToDeploy: ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{ secrets.DOCKERHUB_MONOREPO_APP_REPO_BACKEND }}:latest
           
-
       # Deploy Frontend to Container App (if frontend also in Azure Container Appx)
       - name: Deploy Frontend to Container App
         uses: azure/container-apps-deploy-action@v1
