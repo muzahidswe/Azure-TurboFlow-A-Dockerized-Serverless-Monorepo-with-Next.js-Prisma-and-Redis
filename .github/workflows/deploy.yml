@@ -21,14 +21,14 @@ jobs:
       # Build & Push Backend
       - name: Build and Push Backend Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{DOCKERHUB_MONOREPO_APP_REPO_BACKEND}}:latest -f apps/backend/Dockerfile .
-          docker push ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{DOCKERHUB_MONOREPO_APP_REPO_BACKEND}}:latest
+          docker build -t ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{secrets.DOCKERHUB_MONOREPO_APP_REPO_BACKEND}}:latest -f apps/backend/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{secrets.DOCKERHUB_MONOREPO_APP_REPO_BACKEND}}:latest
 
       # Build & Push Frontend
       - name: Build and Push Frontend Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{DOCKERHUB_MONOREPO_APP_REPO_FORNTEND}}:latest -f apps/frontend/Dockerfile .
-          docker push ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{DOCKERHUB_MONOREPO_APP_REPO_FORNTEND}}:latest
+          docker build -t ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{secrets.DOCKERHUB_MONOREPO_APP_REPO_FORNTEND}}:latest -f apps/frontend/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{secrets.DOCKERHUB_MONOREPO_APP_REPO_FORNTEND}}:latest
 
   deploy-to-azure:
     needs: build-and-push
