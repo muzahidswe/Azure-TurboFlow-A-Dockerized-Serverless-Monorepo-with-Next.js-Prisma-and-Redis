@@ -19,10 +19,13 @@ jobs:
           password: ${{ secrets.DOCKERHUB_MONOREPO_APP_TOKEN }}
 
       # Build & Push Backend
+      # docker build -t ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{secrets.DOCKERHUB_MONOREPO_APP_REPO_BACKEND}}:latest -f apps/backend/Dockerfile .
+      # docker push ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{secrets.DOCKERHUB_MONOREPO_APP_REPO_BACKEND}}:latest
+
       - name: Build and Push Backend Image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{secrets.DOCKERHUB_MONOREPO_APP_REPO_BACKEND}}:latest -f apps/backend/Dockerfile .
-          docker push ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{secrets.DOCKERHUB_MONOREPO_APP_REPO_BACKEND}}:latest
+        run: |    
+          docker build -t ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/azure-turbo-monorepo-backend:latest -f apps/backend/Dockerfile .          
+          docker push ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/azure-turbo-monorepo-backend:latest
 
       # Build & Push Frontend
       - name: Build and Push Frontend Image
