@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev -p 3001"
+  },
+  "prisma": {
+    "engineType": "library"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "@repo/database": "*",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcryptjs": "^3.0.3",
+    "dotenv-cli": "^11.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "next": "^16.2.4",
+    "prisma": "^5.22.0",
+    "redis": "^5.12.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/next": "^8.0.7",
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.2",
+    "typescript": "^5.9.2"
+  }
+}

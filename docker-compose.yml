@@ -1,0 +1,59 @@
+version: '3.8'
+services:
+  # Database Service (PostgreSQL)
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_NAME}
+    ports:
+      - "5432:5432"
+
+  # Caching Service (Redis)
+  redis:
+    image: redis:alpine
+    container_name: mono_redis
+    ports:
+      - "6379:6379"
+
+  # backend service
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: mono_backend
+    ports:
+      - "3001:3000"
+    environment:
+      - REDIS_URL=${REDIS_URL}
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - redis
+
+  # frontend service
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    container_name: mono_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} # Through Nginx
+    depends_on:
+      - backend
+
+  # Reverse Proxy (Nginx)
+  nginx:
+    image: nginx:alpine
+    container_name: mono_nginx
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro # :ro মানে Read Only
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+volumes:
+  redis_data:

@@ -1,0 +1,13 @@
+// apps/server/prisma.config.ts
+import { defineConfig } from '@prisma/config';
+import dotenv from 'dotenv';
+import path from 'path';
+
+// .env ফাইল লোড করার জন্য এটি প্রয়োজন
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+export default defineConfig({
+  datasource: {
+    url: process.env.DATABASE_URL,
+  },
+});

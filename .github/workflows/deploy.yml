@@ -1,0 +1,58 @@
+name: Build, Push and Deploy to Azure Container Apps
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_MONOREPO_APP_TOKEN }}
+
+      # Build & Push Backend
+      - name: Build and Push Backend Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/azure-backend:latest -f apps/backend/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/azure-backend:latest
+
+      # Build & Push Frontend
+      - name: Build and Push Frontend Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/azure-frontend:latest -f apps/frontend/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/azure-frontend:latest
+
+  deploy-to-azure:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy Backend to Container App
+      - name: Deploy Backend to Container App
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          containerAppName: ${{ secrets.AZURE_BACKEND_APP_NAME }} # GitHub Secret Backend APP Name
+          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          imageToDeploy: ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{ secrets.DOCKERHUB_MONOREPO_APP_REPO_BACKEND }}:latest
+          
+
+      # Deploy Frontend to Container App (if frontend also in Azure Container Appx)
+      - name: Deploy Frontend to Container App
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          containerAppName: ${{ secrets.AZURE_FRONTEND_APP_NAME }} # GitHub Secret Frontend APP Name
+          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          imageToDeploy: ${{ secrets.DOCKERHUB_MONOREPO_APP_USERNAME }}/${{ secrets.DOCKERHUB_MONOREPO_APP_REPO_FORNTEND }}:latest
+           
